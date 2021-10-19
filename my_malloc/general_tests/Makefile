@@ -1,0 +1,25 @@
+CC=gcc
+CFLAGS=-O3 -fPIC
+DEPS=my_malloc.h
+MALLOC_VERSION=FF
+WDIR=./
+
+all: lib mymalloc_test
+
+lib: my_malloc.o
+        $(CC) $(CFLAGS) -shared -o libmymalloc.so my_malloc.o
+
+%.o: %.c my_malloc.h
+        $(CC) $(CFLAGS) -c -o $@ $<
+
+mymalloc_test: mymalloc_test.c
+        $(CC) $(CFLAGS) -I$(WDIR) -L$(WDIR) -D$(MALLOC_VERSION) -Wl,-rpath=$(WDIR) -o $@ mymalloc_test.c\
+ -lmymalloc -lrt
+
+clean:
+        rm -f *~ *.o mymalloc_test *.soc
+
+clobber:
+        rm -f *~ *.o
+
+
