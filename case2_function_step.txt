@@ -1,0 +1,88 @@
+char *p1 = malloc(3);
+此时head为空
+此时tail为空
+调用sbrk分配一个node的空间作为头部信息并将其值返回给head
+再用一个sbrk分配size==3的空间作为返回值指向的空间
+且头部记录分配信息
+head->size=3
+head->next=head
+head->is_free=false
+return head+1
+=====================
+free(p1);
+首先得到头部所在的地址
+head = p1-sizeof(head);
+然后修改head
+所以head->is_free = true
+然后p1=null
+=====================
+free(p1)
+此时p1==null
+直接返回null并打印错误信息
+=====================
+char *p2 = malloc(3)
+head->is_free为true
+head->size==3
+return head+1
+=====================
+char *p3 = malloc(4)
+此时head不为空
+head->is_free==false
+head->next ==head
+node* n1新建一个Node节点用来作为head的下一个
+此时调用sbrk分配一个node的空间作为存放头部信息的内存并返回值给n1
+再调用sbrk分配size==4作为返回值指向的空间
+n1->size=4
+n1->next=head
+n1->is_free = false
+返回n1+1
+==========================
+char *p4 = malloc(2)
+head不为空
+head->is_free == false
+head->next->is_free == false
+head->next->next==head
+Node* n1;
+此时调用sbrk分配新空间给n1
+head->next->next = n1
+n1->next = head
+n1->size = 2
+n1->is_free == false
+再调用一个sbrk分配size==2用来作为返回值指向的空间
+返回n1+1
+=============================
+char *p5 = malloc(3)
+head不为空
+head->is_free = false
+head->next->is_free =false
+head->next->next->is_free = false
+head->next->next->next = head
+Node* n1
+调用sbrk分配新空间给n1
+head->next->next->next = n1
+n1->next= head
+n1->size = 3
+n1->is_free == false
+再调用一个sbrk作为分配size==3作为返回值指向的空间
+return n1+1
+==========================
+free(p3)
+首先得到头部所在的地址
+head = p3-1;
+然后修改head
+所以head->is_free = true
+然后p3=null
+==========================
+free(p4)
+首先得到头部所在的地址
+head = p4-1;
+然后修改head
+所以head->is_free = true
+从第一个node开始发现有>=1个空间is_free都是true
+则start代表第一个is_free==true的 end代表最后那个
+start->size = 累加的和
+start->next=end->next
+然后p4=null
+==========================
+
+

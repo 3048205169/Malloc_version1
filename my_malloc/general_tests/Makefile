@@ -7,19 +7,17 @@ WDIR=./
 all: lib mymalloc_test
 
 lib: my_malloc.o
-        $(CC) $(CFLAGS) -shared -o libmymalloc.so my_malloc.o
+	$(CC) $(CFLAGS) -shared -o libmymalloc.so my_malloc.o
 
 %.o: %.c my_malloc.h
-        $(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 mymalloc_test: mymalloc_test.c
-        $(CC) $(CFLAGS) -I$(WDIR) -L$(WDIR) -D$(MALLOC_VERSION) -Wl,-rpath=$(WDIR) -o $@ mymalloc_test.c\
- -lmymalloc -lrt
+	$(CC) $(CFLAGS) -I$(WDIR) -L$(WDIR) -D$(MALLOC_VERSION) -Wl,-rpath,$(WDIR) -o $@ mymalloc_test.c\
+ -lmymalloc
 
 clean:
-        rm -f *~ *.o mymalloc_test *.soc
+	rm -f *~ *.o mymalloc_test *.soc
 
 clobber:
-        rm -f *~ *.o
-
-
+	rm -f *~ *.o
