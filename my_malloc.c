@@ -3,12 +3,11 @@
 Node *head = NULL;
 void * ff_malloc(size_t size){
   if(head==NULL){
-    head = sbrk(sizeof(Node));
+    head = sbrk(sizeof(Node)+size);
     head->size = size;
     head->is_free = 0;
     head->next = head;
-    head = sbrk(size);
-    return head+1;
+    return (void*)(head+1);
   }else{//head!=NULL
     Node *cur = head;
     while(cur->next!=head){//cur结束以后要么是末尾元素要么是空闲可用空间
@@ -20,14 +19,14 @@ void * ff_malloc(size_t size){
     if(cur->is_free == 1&&cur->size>=size){//空闲空间可被使用
       cur->size = size;
       cur->is_free = 0;
-      return cur+1;
+      return (void*)(cur+1);
     }else{//末尾元素且非空闲空间
       Node* n1=sbrk(size);
       n1->next = head;
       cur->next = n1;
       n1->size =2;
       n1->is_free = 0;
-      return n1+1;
+      return (void*)(n1+1);
     }
     
   }
@@ -40,7 +39,7 @@ void ff_free(void *ptr){
     return;
   }
   //有效指针
-  Node *header = ptr-1;
+  Node *header =(Node*)ptr-1;
   header->is_free=1;
   ff_coal(header);
   ptr = NULL;
@@ -49,8 +48,8 @@ void ff_free(void *ptr){
 void ff_coal(Node *header){//合并size>=2的free的共同空间
   Node *start;
   Node *end;
-  int count;
-  int sumsize;
+  int count=0;
+  int sumsize=0;
   for(start =header;start!=head;start=start->next){
     if(start->is_free==0){
       continue;
