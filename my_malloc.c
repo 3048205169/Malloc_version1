@@ -1,6 +1,17 @@
 #include "my_malloc.h"
 #include <unistd.h>
 Node *head = NULL;
+
+
+void * bf_malloc(size_t size){
+  return NULL;
+}
+void bf_free(void *ptr){
+
+}
+
+
+
 void * ff_malloc(size_t size){
   if(head==NULL){
     head = sbrk(sizeof(Node)+size);
@@ -21,10 +32,10 @@ void * ff_malloc(size_t size){
       cur->is_free = 0;
       return (void*)(cur+1);
     }else{//末尾元素且非空闲空间
-      Node* n1=sbrk(size);
+      Node* n1=sbrk(size+sizeof(Node));
       n1->next = head;
       cur->next = n1;
-      n1->size =2;
+      n1->size =size;
       n1->is_free = 0;
       return (void*)(n1+1);
     }
@@ -41,40 +52,29 @@ void ff_free(void *ptr){
   //有效指针
   Node *header =(Node*)ptr-1;
   header->is_free=1;
-  ff_coal(header);
-  ptr = NULL;
+  ff_coal();
 }
 
-void ff_coal(Node *header){//合并size>=2的free的共同空间
+void ff_coal(){//合并size>=2的free的共同空间
   Node *start;
   Node *end;
   int count=0;
   int sumsize=0;
-  for(start =header;start!=head;start=start->next){
-    if(start->is_free==0){
+  for(start =head;start->next!=head;){
+    if(start->is_free == 0){
+      start = start->next;
       continue;
     }
-    count=0;
-    sumsize =0;
-    for(end = start->next;end->is_free!=0;end = end->next){
-      count = count+1;
-      sumsize = sumsize+end->size;
-      sumsize = sumsize+sizeof(Node);
+    if(start->next->is_free == 1){
+      //合并start和start->next
+      start->size = start->size+sizeof(Node)+start->next->size;
+      start->next = start->next->next;
+    }else{
+      start = start->next;
     }
-    break;
+    
   }
 
-  if(count>=1){
-    start->next = end->next;
-    start->size = start->size+sumsize;
-  }
   
 }
 
-
-void * bf_malloc(size_t size){
-
-}
-void bf_free(void *ptr){
-
-}

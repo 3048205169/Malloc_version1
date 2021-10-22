@@ -14,4 +14,4 @@ typedef struct Node{
   int is_free;//1=free 0=malloc
 }Node;
 
-void ff_coal(Node* header);
+void ff_coal();

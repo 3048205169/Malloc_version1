@@ -1,16 +1,12 @@
-char *p1 = malloc(3);
 
-free(p1);
 
-free(p1);
+int *p1 = ff_malloc(10*sizeof(int));//malloc p1
 
-char *p2 = malloc(3);
+ff_free(p1);//free p1
 
-char *p3 = malloc(4);
+char *p2 = ff_malloc(5*sizeof(char));//malloc p2
 
-char *p4 = malloc(2);
+double *p3 = ff_malloc(6*sizeof(double));//malloc p3
+ 
 
-char *p5 = malloc(3);
-free(p3);
-
-free(p4);
+int *p4 = ff_malloc(3*sizeof(int));//malloc p4

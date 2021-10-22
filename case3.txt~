@@ -1,0 +1,16 @@
+xchar *p1 = malloc(3);
+
+free(p1);
+
+free(p1);
+
+char *p2 = malloc(3);
+
+char *p3 = malloc(4);
+
+char *p4 = malloc(2);
+
+char *p5 = malloc(3);
+free(p3);
+
+free(p4);

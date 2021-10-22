@@ -1,0 +1,17 @@
+char *p1 = ff_malloc(3);
+
+ff_free(p1);
+
+ff_free(p1);
+
+char *p2 = ff_malloc(3);
+
+char *p3 = ff_malloc(4);
+
+char *p4 = ff_malloc(2);
+
+char *p5 = ff_malloc(3);
+
+ff_free(p3);
+
+ff_free(p4);
