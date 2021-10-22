@@ -10,6 +10,8 @@ char *p4 = malloc(4);
 
 free(p3);
 
+free(p3);
+
 free(p4);
 
 free(p1);

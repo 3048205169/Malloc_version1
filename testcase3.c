@@ -13,11 +13,11 @@ void print_mem_list(){
            ,node->size,node->is_free,(void*)node->next);   
 }
 int main(){
-  char *p1 = ff_malloc(3*sizeof(char));
+  char *p1 = bf_malloc(3*sizeof(char));
 
-  ff_free(p1);
+  bf_free(p1);
 
-  ff_free(p1);
+  bf_free(p1);
   print_mem_list();
   printf("===========================\n");
   

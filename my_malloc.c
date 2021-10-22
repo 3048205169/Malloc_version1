@@ -1,17 +1,73 @@
 #include "my_malloc.h"
 #include <unistd.h>
 Node *head = NULL;
-
-
 void * bf_malloc(size_t size){
+  if(head==NULL){
+    head = sbrk(sizeof(Node)+size);
+    head->size = size;
+    head->is_free = 0;
+    head->next = head;
+    return (void*)(head+1);
+  }else{
+    Node *cur=NULL;
+    Node *start = head;
+    while(start->next!=head){
+      if(start->is_free == 0){
+	start = start->next;
+	continue;
+      }
+      if(start->size<size){
+	start = start->next;
+	continue;
+      }
+      if(cur==NULL||start->size<=cur->size){
+	cur = start;
+	start = start->next;
+	continue;
+      }
+      start = start->next;
+    }
+    //此时start到了最后但是cur还没有
+    
+    if(start->is_free == 1){
+      if(cur==NULL){
+	start->size = size;
+	start->is_free = 0;
+	return (void*)(start+1);
+      }
+      if(cur!=NULL){
+	if(start->size<=cur->size){
+	  cur = start;
+	  cur->is_free = 0;
+	  cur->size = size;
+	  return (void*)(cur+1);	 
+	}else{
+	  cur->is_free = 0;
+	  cur->size = size;
+	  return (void*)(cur+1);
+	}
+      }
+    }else if(start->is_free == 0){
+      if(cur == NULL){
+	cur=sbrk(size+sizeof(Node));
+	cur->next = head;
+	start->next = cur;
+	cur->size =size;
+	cur->is_free = 0;
+	return (void*)(cur+1);
+      }else{	
+	cur->size =size;
+	cur->is_free = 0;
+	return (void*)(cur+1);
+      }
+    }
+    
+  }
   return NULL;
 }
 void bf_free(void *ptr){
-
+  ff_free(ptr);
 }
-
-
-
 void * ff_malloc(size_t size){
   if(head==NULL){
     head = sbrk(sizeof(Node)+size);
