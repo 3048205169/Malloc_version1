@@ -3,9 +3,9 @@
 #include <time.h>
 #include "my_malloc.h"
 
-#define NUM_ITERS    10000
-#define NUM_ITEMS    10000
-#define ALLOC_SIZE   128
+#define NUM_ITERS    10
+#define NUM_ITEMS    2000
+#define ALLOC_SIZE   8
 
 #ifdef FF
 #define MALLOC(sz) ff_malloc(sz)
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
   unsigned long data_segment_free_space;
   struct timespec start_time, end_time;
 
-  if (NUM_ITEMS < 10000) {
+  if (NUM_ITEMS < 1000) {
     printf("Error: NUM_ITEMS must be >= 1000\n");
     return -1;
   } //if
@@ -68,6 +68,8 @@ int main(int argc, char *argv[])
 	//Record fragmentation halfway through (try to repsresent steady state)
 	largest_free_block = get_largest_free_data_segment_size();
 	data_segment_free_space = get_total_free_size();
+	printf("data_segment_size = %lu, data_segment_free_space = %lu\n", largest_fr\
+ee_block, data_segment_free_space);
       } //if
     } //for j
 

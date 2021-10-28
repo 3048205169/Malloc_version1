@@ -3,8 +3,8 @@
 #include <time.h>
 #include "my_malloc.h"
 
-#define NUM_ITERS    50
-#define NUM_ITEMS    10000
+#define NUM_ITERS    5
+#define NUM_ITEMS    10
 
 #ifdef FF
 #define MALLOC(sz) ff_malloc(sz)
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 
   const unsigned chunk_size = 32;
   const unsigned min_chunks = 1;
-  const unsigned max_chunks = 2048;
+  const unsigned max_chunks = 256;
   for (i=0; i < NUM_ITEMS; i++) {
     malloc_items[0][i].bytes = ((rand() % (max_chunks - min_chunks + 1)) + min_chunks) * chunk_size;
     malloc_items[1][i].bytes = ((rand() % (max_chunks - min_chunks + 1)) + min_chunks) * chunk_size;

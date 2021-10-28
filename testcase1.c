@@ -86,6 +86,9 @@ int main(){
   print_mem_list();
   printf("p6 point at %p\n",p6);
   printf("=======================\n");
+
+  printf("get largest free data segment size = %lu",get_largest_free_data_segment_size());
+  printf("get total free size = %lu",get_total_free_size());
   
   return EXIT_SUCCESS;
 }

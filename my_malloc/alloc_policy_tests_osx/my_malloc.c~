@@ -134,12 +134,12 @@ void ff_coal(){//合并size>=2的free的共同空间
 }
 
 
-unsigned long get_largest_free_data_segment_size1(){
+unsigned long get_largest_free_data_segment_size(){
   return 3;
 }
   
 
-unsigned long get_largest_free_data_segment_size(){
+unsigned long get_largest_free_data_segment_size1(){
   Node* cur = NULL;
   if(head==NULL){
     return 0;
@@ -161,11 +161,11 @@ unsigned long get_largest_free_data_segment_size(){
 }
 
 
-unsigned long get_total_free_size1(){
+unsigned long get_total_free_size(){
   return 3;
 }
 
-unsigned long get_total_free_size(){
+unsigned long get_total_free_size1(){
   unsigned long ans = 0;
   if(head==NULL){
     return ans;

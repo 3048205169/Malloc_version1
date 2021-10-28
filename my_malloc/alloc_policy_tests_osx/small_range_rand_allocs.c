@@ -4,7 +4,7 @@
 #include "my_malloc.h"
 
 #define NUM_ITERS    100
-#define NUM_ITEMS    10000
+#define NUM_ITEMS    100
 
 #ifdef FF
 #define MALLOC(sz) ff_malloc(sz)

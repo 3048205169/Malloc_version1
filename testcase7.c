@@ -1,32 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <time.h>
-#include "my_malloc.h"
+#include "my_malloc.c"
 
 #define NUM_ITERS    100
-#define NUM_ITEMS    1000
-
-#ifdef FF
-#define MALLOC(sz) ff_malloc(sz)
-#define FREE(p)    ff_free(p)
-#endif
-#ifdef BF
-#define MALLOC(sz) bf_malloc(sz)
-#define FREE(p)    bf_free(p)
-#endif
-
-
-double calc_time(struct timespec start, struct timespec end) {
-  double start_sec = (double)start.tv_sec*1000000000.0 + (double)start.tv_nsec;
-  double end_sec = (double)end.tv_sec*1000000000.0 + (double)end.tv_nsec;
-
-  if (end_sec < start_sec) {
-    return 0;
-  } else {
-    return end_sec - start_sec;
-  }
-};
-
+#define NUM_ITEMS    100
 
 struct malloc_list {
   size_t bytes;
@@ -38,7 +15,6 @@ malloc_list_t malloc_items[2][NUM_ITEMS];
 
 unsigned free_list[NUM_ITEMS];
 
-
 int main(int argc, char *argv[])
 {
   int i, j, k;
@@ -49,15 +25,18 @@ int main(int argc, char *argv[])
 
   srand(0);
 
-  const unsigned chunk_size = 8;
-  const unsigned min_chunks = 8;
-  const unsigned max_chunks = 64;
+  const unsigned chunk_size = 32;
+  const unsigned min_chunks = 4;
+  const unsigned max_chunks = 16;
   for (i=0; i < NUM_ITEMS; i++) {
     malloc_items[0][i].bytes = ((rand() % (max_chunks - min_chunks + 1)) + min_chunks) * chunk_size;
     malloc_items[1][i].bytes = ((rand() % (max_chunks - min_chunks + 1)) + min_chunks) * chunk_size;
     free_list[i] = i;
   } //for i
 
+  //测试：打印所有malloc_items的成员
+
+    
   i = NUM_ITEMS;
   while (i > 1) {
     i--;
@@ -66,43 +45,53 @@ int main(int argc, char *argv[])
     free_list[i] = free_list[j];
     free_list[j] = tmp;
   } //while
-
-
+  
   for (i=0; i < NUM_ITEMS; i++) {
-    malloc_items[0][i].address = (int *)MALLOC(malloc_items[0][i].bytes);
+    malloc_items[0][i].address = (int *)ff_malloc(malloc_items[0][i].bytes);
   } //for i
 
 
-  //Start Time
-  clock_gettime(CLOCK_MONOTONIC, &start_time);
 
+  
+  
+  //Start Time  
   for (i=0; i < NUM_ITERS; i++) {
     unsigned malloc_set = i % 2;
     for (j=0; j < NUM_ITEMS; j+=50) {
       for (k=0; k < 50; k++) {
+	//自己的测试
+	if(j+k>NUM_ITEMS){
+	  printf("哈哈哈，超过了吧");
+	}
+	//
 	unsigned item_to_free = free_list[j+k];
-	FREE(malloc_items[malloc_set][item_to_free].address);
+	ff_free(malloc_items[malloc_set][item_to_free].address);
       } //for k
       for (k=0; k < 50; k++) {
-	malloc_items[1-malloc_set][j+k].address = (int *)MALLOC(malloc_items[1-malloc_set][j+k].bytes);
+	malloc_items[1-malloc_set][j+k].address = (int *)ff_malloc(malloc_items[1-malloc_set][j+k].bytes);
       } //for k
     } //for j
   } //for i
-
   //Stop Time
-  clock_gettime(CLOCK_MONOTONIC, &end_time);
 
+  /**
+  //测试：
+    for(size_t w = 0; w<NUM_ITEMS; w++){
+    printf("malloc_items[0][%lu] = %lu",w,malloc_items[0][i].bytes);
+  }
+  
+  
   largest_free_block = get_largest_free_data_segment_size();
   data_segment_free_space = get_total_free_size();
   printf("data_segment_size = %lu, data_segment_free_space = %lu\n", largest_free_block, data_segment_free_space);
 
-  double elapsed_ns = calc_time(start_time, end_time);
-  printf("Execution Time = %f seconds\n", elapsed_ns / 1e9);
   printf("Fragmentation  = %f\n", 1.0 - largest_free_block /(float)data_segment_free_space);
 
-  for (i=0; i < NUM_ITEMS; i++) {
-    FREE(malloc_items[0][i].address);
-  } //for i
 
-  return 0;
+  for (i=0; i < NUM_ITEMS; i++) {
+    ff_free(malloc_items[0][i].address);
+  } //for i
+  */
+  return EXIT_SUCCESS;
+  
 }
